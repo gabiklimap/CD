@@ -2243,7 +2243,7 @@
 
         // 5% commission in sale month (on gross value)
         const grossVal = parseFloat(lead.grossValue) || 0;
-        if (month === saleMonth && grossVal > 200) {
+        if (month === saleMonth && grossVal > 199) {
             commission += grossVal * 0.05;
         }
 
