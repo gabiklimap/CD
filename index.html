@@ -1050,6 +1050,10 @@
                     <input type="tel" class="form-input" id="leadPhone" placeholder="(555) 000-0000">
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="leadEmail" placeholder="client@email.com">
+                </div>
+                <div class="form-group">
                     <label class="form-label">Date *</label>
                     <input type="date" class="form-input" id="leadDate">
                 </div>
@@ -2594,6 +2598,7 @@ function onStatusChange() {
 function saveLead() {
     const name     = document.getElementById('leadName').value.trim();
     const phone    = document.getElementById('leadPhone').value.trim();
+    const email    = document.getElementById('leadEmail').value.trim();
     const date     = document.getElementById('leadDate').value;
     const platform = document.getElementById('leadPlatform').value;
     const status   = document.getElementById('leadStatus').value;
@@ -2617,7 +2622,7 @@ function saveLead() {
     const existing = editingLeadId ? leads.find(x=>x.id===editingLeadId) : null;
     const lead = {
         id: editingLeadId||Date.now(),
-        date, name, phone, platform, status,
+        date, name, phone, email, platform, status,
         bookedBy:bookedBy||'', cleaningType:cleaning,
         grossValue:gross, netValue:net,
         frequency:freq, secondCleanDate:scd,
@@ -2670,6 +2675,7 @@ function clearLeadForm() {
     document.getElementById('entryFormTitle').textContent='➕ Add New Lead';
     document.getElementById('leadName').value='';
     document.getElementById('leadPhone').value='';
+    document.getElementById('leadEmail').value='';
     document.getElementById('leadDate').valueAsDate=new Date();
     document.getElementById('leadPlatform').value='thumbtack';
     document.getElementById('leadStatus').value='no_response';
@@ -2718,6 +2724,7 @@ function editLead(id) {
     document.getElementById('entryFormTitle').textContent='✏️ Edit Lead';
     document.getElementById('leadName').value=l.name||'';
     document.getElementById('leadPhone').value=l.phone||'';
+    document.getElementById('leadEmail').value=l.email||'';
     document.getElementById('leadDate').value=l.date||'';
     document.getElementById('leadPlatform').value=l.platform||'thumbtack';
     document.getElementById('leadStatus').value=l.status||'no_response';
@@ -3145,6 +3152,7 @@ function showLeadDetail(id) {
     body += '<div class="lead-modal-row">';
     body += field('Name', esc(l.name||''));
     body += field('Phone', esc(l.phone||''));
+    body += field('Email', esc(l.email||''));
     body += '</div><div class="lead-modal-row">';
     body += field('Date', fmtDate(l.date));
     body += '<div class="lead-modal-field"><div class="lead-modal-field-label">Platform</div><div class="lead-modal-field-value">'+platBadge(l.platform)+'</div></div>';
