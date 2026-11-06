@@ -1240,7 +1240,7 @@
             <!-- TOP-LEVEL TABS: Team / Pipeline -->
             <div class="toptab-bar">
                 <button class="toptab-btn" id="toptab-team" onclick="switchTopTab('team')">
-                    👥 Team <span class="toptab-count" id="toptab-count-team">0</span>
+                    🧹 Cleaners <span class="toptab-count" id="toptab-count-team">0</span>
                 </button>
                 <button class="toptab-btn active" id="toptab-pipeline" onclick="switchTopTab('pipeline')">
                     🔍 Pipeline <span class="toptab-count" id="toptab-count-pipeline">0</span>
@@ -1276,8 +1276,13 @@
                     </button>
                     <button class="pipeline-tab" id="ptab-5" onclick="switchHiringStage(5)">
                         <div class="pt-num">5</div>
-                        <div class="pt-label">Pipeline</div>
+                        <div class="pt-label">Approved</div>
                         <div class="pt-count" id="ptab-count-5">0</div>
+                    </button>
+                    <button class="pipeline-tab" id="ptab-6" onclick="switchHiringStage(6)">
+                        <div class="pt-num">6</div>
+                        <div class="pt-label">Dismissed</div>
+                        <div class="pt-count" id="ptab-count-6">0</div>
                     </button>
                 </div>
                 <!-- Stage candidate list -->
@@ -3621,7 +3626,8 @@ const HIRING_STAGES = [
     { n:2, label:'Phone Screening', icon:'📞' },
     { n:3, label:'Survey', icon:'📋' },
     { n:4, label:'Interview', icon:'🤝' },
-    { n:5, label:'Pipeline', icon:'🔄' }
+    { n:5, label:'Approved', icon:'✅' },
+    { n:6, label:'Dismissed', icon:'🚫' }
 ];
 function isInTeam(c) {
     if ('inTeam' in c) return !!c.inTeam;
@@ -3850,7 +3856,7 @@ function switchTopTab(tab) {
 function switchHiringStage(n) {
     n = Number(n);
     currentHiringStage = n;
-    for (let i=1;i<=5;i++) {
+    for (let i=1;i<=6;i++) {
         const t = document.getElementById('ptab-'+i);
         if (t) t.classList.toggle('active', i===n);
     }
@@ -3864,7 +3870,7 @@ function updatePipelineCounts() {
     const pcEl = document.getElementById('toptab-count-pipeline');
     if (tcEl) tcEl.textContent = teamPeople.length;
     if (pcEl) pcEl.textContent = pipelinePeople.length;
-    for (let i=1;i<=5;i++) {
+    for (let i=1;i<=6;i++) {
         const el = document.getElementById('ptab-count-'+i);
         if (!el) continue;
         const cnt = pipelinePeople.filter(c => getCandidateStage(c)===i).length;
@@ -3920,8 +3926,8 @@ function dismissMember(id, event) {
     if (event) event.stopPropagation();
     if (!confirm('Mark this person as dismissed and move them back to Pipeline?')) return;
     const today = new Date().toISOString().slice(0,10);
-    uref('hiringCandidates/'+id).update({ inTeam: false, hired: false, dismissedDate: today, stage: 5 })
-        .then(() => { showToast('Moved back to Pipeline. ↩'); switchTopTab('pipeline'); switchHiringStage(5); })
+    uref('hiringCandidates/'+id).update({ inTeam: false, hired: false, dismissedDate: today, stage: 6 })
+        .then(() => { showToast('Moved to Dismissed. ↩'); switchTopTab('pipeline'); switchHiringStage(6); })
         .catch(e => alert('Error: '+e.message));
 }
 
@@ -3931,7 +3937,7 @@ function renderTeamView() {
     const members = hiringCandidates.filter(c => isInTeam(c))
         .sort((a,b) => (b.hiredDate||'').localeCompare(a.hiredDate||''));
     if (!members.length) {
-        container.innerHTML = '<div class="table-card"><div class="empty"><span class="empty-icon">👥</span><div class="empty-text">No team members yet. Click ✅ Hire on a pipeline candidate to add them here.</div></div></div>';
+        container.innerHTML = '<div class="table-card"><div class="empty"><span class="empty-icon">👥</span><div class="empty-text">No cleaners yet. Click ✅ Hire on a pipeline candidate to add them here.</div></div></div>';
         return;
     }
     container.innerHTML = members.map(c => {
