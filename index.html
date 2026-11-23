@@ -1045,6 +1045,7 @@
                 <button class="clients-tab" id="ctab-onetime" onclick="switchClientTab('onetime')">One-Time</button>
                 <button class="clients-tab" id="ctab-lost" onclick="switchClientTab('lost')">Lost Clients</button>
             </div>
+            <input id="clientsSearch" type="text" placeholder="Search by name, phone or email…" oninput="renderClientsSection()" style="padding:7px 13px;border:1.5px solid var(--line);border-radius:9px;font-size:13px;font-family:inherit;color:var(--text-dark);background:var(--white);outline:none;width:230px;max-width:100%" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--line)'">
         </div>
         <div id="clientsFreqBar" style="display:none" class="clients-freq-tabs">
             <button class="clients-freq-tab active" id="cfreq-all" onclick="switchClientFreq('all')">All</button>
@@ -4555,14 +4556,17 @@ function renderClientsSection() {
     var onetime   = booked.filter(function(l) { return (!l.frequency || l.frequency === 'onetime') && !lostIds.has(l.id); });
     var lostList  = Object.values(lostClients);
 
+    var active = recurring.length + onetime.length;
     var statRow = document.getElementById('clientsStatRow');
     if (statRow) {
         statRow.innerHTML =
-            '<div class="clients-stat"><div class="clients-stat-num">'+booked.length+'</div><div class="clients-stat-lbl">Total Booked</div></div>' +
+            '<div class="clients-stat"><div class="clients-stat-num">'+active+'</div><div class="clients-stat-lbl">Active Clients</div></div>' +
             '<div class="clients-stat"><div class="clients-stat-num">'+recurring.length+'</div><div class="clients-stat-lbl">Recurring</div></div>' +
             '<div class="clients-stat"><div class="clients-stat-num">'+onetime.length+'</div><div class="clients-stat-lbl">One-Time</div></div>' +
             '<div class="clients-stat"><div class="clients-stat-num" style="color:var(--danger)">'+lostList.length+'</div><div class="clients-stat-lbl">Lost</div></div>';
     }
+
+    var searchQ = ((document.getElementById('clientsSearch')||{}).value||'').toLowerCase().trim();
 
     var list = [];
     if (currentClientTab === 'all') {
@@ -4574,12 +4578,25 @@ function renderClientsSection() {
         list = onetime;
     }
 
+    // show count badge in freq bar when filtering recurring
+    if (currentClientTab === 'recurring') {
+        ['all','monthly','weekly','biweekly'].forEach(function(f) {
+            var btn = document.getElementById('cfreq-'+f);
+            if (!btn) return;
+            var cnt = f==='all' ? recurring.length : recurring.filter(function(l){return l.frequency===f;}).length;
+            btn.textContent = (f==='all'?'All':f==='monthly'?'Monthly':f==='weekly'?'Weekly':'Bi-Weekly') + ' ('+cnt+')';
+        });
+    }
+
     var grid = document.getElementById('clientsGrid');
     if (!grid) return;
 
     if (currentClientTab === 'lost') {
-        if (!lostList.length) { grid.innerHTML = '<div class="clients-empty">No lost clients recorded.</div>'; return; }
-        grid.innerHTML = lostList.map(function(cl) {
+        var filteredLost = searchQ ? lostList.filter(function(cl){
+            return (cl.name||'').toLowerCase().includes(searchQ)||(cl.phone||'').toLowerCase().includes(searchQ)||(cl.email||'').toLowerCase().includes(searchQ);
+        }) : lostList;
+        if (!filteredLost.length) { grid.innerHTML = '<div class="clients-empty">'+(lostList.length?'No results for "'+esc(searchQ)+'"':'No lost clients recorded.')+'</div>'; return; }
+        grid.innerHTML = filteredLost.map(function(cl) {
             return '<div class="client-card">' +
               '<div class="client-card-header">' +
                 '<div class="client-card-name">'+esc(cl.name||'')+'</div>' +
@@ -4600,7 +4617,10 @@ function renderClientsSection() {
         return;
     }
 
-    if (!list.length) { grid.innerHTML = '<div class="clients-empty">No clients in this view.</div>'; return; }
+    if (searchQ) list = list.filter(function(l){
+        return (l.name||'').toLowerCase().includes(searchQ)||(l.phone||'').toLowerCase().includes(searchQ)||(l.email||'').toLowerCase().includes(searchQ);
+    });
+    if (!list.length) { grid.innerHTML = '<div class="clients-empty">No clients found.</div>'; return; }
     grid.innerHTML = list.map(function(l) {
         var freqClass = l.frequency || 'onetime';
         var isRecurring = l.frequency && l.frequency !== 'onetime';
