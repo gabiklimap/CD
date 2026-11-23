@@ -10,14 +10,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --navy: #0b1829; --navy-mid: #132035; --blue: #1a5ce8; --blue-light: #3b7cf0;
-            --teal: #4ecdc4; --teal-dark: #38b2aa; --cream: #ffffff; --cream-dark: #ebe5d6;
+            --teal: #4ecdc4; --teal-dark: #38b2aa; --cream: #ffffff; --cream-dark: #e2e8f0;
             --white: #ffffff; --text-dark: #0b1829; --text-mid: #334155; --text-light: #64748b;
-            --muted: #94a3b8; --app-bg: #f6f3ea; --line: #ebe5d6;
+            --muted: #94a3b8; --app-bg: #f1f5f9; --bg: #f1f5f9; --line: #e2e8f0;
             --success: #22c55e; --danger: #ef4444; --warning: #f59e0b; --border: 2.5px;
             --soft: 0 1px 2px rgba(11,24,41,.04), 0 6px 18px rgba(11,24,41,.05);
         }
@@ -419,6 +419,45 @@
         .candidate-detail-name { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; color:#fff; }
         .candidate-detail-meta { font-size:12px; color:rgba(255,255,255,0.55); font-weight:600; margin-top:3px; }
         @media(max-width:768px) { .g2-checklist { grid-template-columns:1fr 1fr; } .candidate-card { flex-wrap:wrap; } }
+/* ── CLIENTS SECTION ── */
+.clients-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.clients-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+.clients-tab { padding:7px 16px; border-radius:20px; border:1.5px solid var(--line); background:var(--white); color:var(--text-mid); font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; }
+.clients-tab.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+.clients-tab:hover:not(.active) { border-color:var(--blue); color:var(--blue); }
+.clients-freq-tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:16px; }
+.clients-freq-tab { padding:5px 13px; border-radius:14px; border:1.5px solid var(--line); background:transparent; color:var(--text-light); font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+.clients-freq-tab.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+.clients-freq-tab:hover:not(.active) { border-color:var(--teal); color:var(--teal-dark); }
+.clients-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.client-card { background:var(--white); border-radius:12px; padding:16px 18px; border:1.5px solid var(--line); box-shadow:var(--soft); display:flex; flex-direction:column; gap:8px; }
+.client-card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+.client-card-name { font-size:15px; font-weight:700; color:var(--text-dark); }
+.client-card-freq { font-size:11px; font-weight:700; padding:3px 9px; border-radius:10px; white-space:nowrap; }
+.freq-monthly { background:#dbeafe; color:#1d4ed8; }
+.freq-weekly { background:#dcfce7; color:#15803d; }
+.freq-biweekly { background:#fef9c3; color:#854d0e; }
+.freq-onetime { background:#f3e8ff; color:#7e22ce; }
+.client-card-info { font-size:13px; color:var(--text-mid); display:flex; flex-direction:column; gap:3px; }
+.client-card-info span { display:flex; align-items:center; gap:5px; }
+.client-card-actions { display:flex; gap:8px; margin-top:4px; }
+.btn-mark-lost { padding:5px 12px; border-radius:8px; border:1.5px solid var(--danger); background:transparent; color:var(--danger); font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+.btn-mark-lost:hover { background:var(--danger); color:#fff; }
+.btn-restore-client { padding:5px 12px; border-radius:8px; border:1.5px solid var(--success); background:transparent; color:var(--success); font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+.btn-restore-client:hover { background:var(--success); color:#fff; }
+.client-lost-reason { font-size:12px; color:var(--danger); background:#fef2f2; border-radius:7px; padding:6px 10px; margin-top:4px; }
+.clients-empty { text-align:center; padding:50px 20px; color:var(--text-light); font-size:14px; }
+.clients-stat-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+.clients-stat { background:var(--white); border-radius:10px; padding:13px 18px; border:1.5px solid var(--line); flex:1; min-width:120px; }
+.clients-stat-num { font-size:22px; font-weight:800; color:var(--blue); }
+.clients-stat-lbl { font-size:11px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.04em; margin-top:1px; }
+.lost-modal-overlay { position:fixed; inset:0; background:rgba(11,24,41,.45); z-index:9000; display:flex; align-items:center; justify-content:center; }
+.lost-modal { background:var(--white); border-radius:16px; padding:28px 28px 24px; width:360px; max-width:90vw; box-shadow:0 20px 60px rgba(0,0,0,.18); }
+.lost-modal h3 { font-size:17px; font-weight:800; color:var(--text-dark); margin:0 0 6px; }
+.lost-modal p { font-size:13px; color:var(--text-mid); margin:0 0 16px; }
+.lost-modal textarea { width:100%; box-sizing:border-box; border:1.5px solid var(--line); border-radius:9px; padding:10px 12px; font-size:13px; font-family:inherit; color:var(--text-dark); resize:vertical; min-height:80px; outline:none; }
+.lost-modal textarea:focus { border-color:var(--blue); }
+.lost-modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:14px; }
     </style>
 </head>
 <body>
@@ -490,7 +529,7 @@
         </button>
 
         <nav class="side-nav">
-            <div class="side-label">Menu</div>
+            <div class="side-label">Overview</div>
             <button class="nav-tab active" id="tab-dashboard" onclick="showSection('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</button>
             <button class="nav-tab" id="tab-leads" onclick="showSection('leads')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg>Leads</button>
             <button class="nav-tab" id="tab-followup" onclick="showSection('followup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg>Follow Up</button>
@@ -499,6 +538,8 @@
             <button class="nav-tab" id="tab-commissions" onclick="showSection('commissions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Commissions</button>
             <button class="nav-tab" id="tab-reviews" onclick="showSection('reviews')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Reviews</button>
             <button class="nav-tab" id="tab-commercial" onclick="showSection('commercial')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Commercial</button>
+            <button class="nav-tab" id="tab-clients" onclick="showSection('clients')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Clients</button>
+            <div class="side-label" style="margin-top:8px">Operations</div>
             <button class="nav-tab" id="tab-goals" onclick="showSection('goals')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg>Goals</button>
             <button class="nav-tab" id="tab-hiring" onclick="showSection('hiring')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Cleaners</button>
             <button class="nav-tab" id="tab-todo" onclick="showSection('todo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>To-Do <span class="nav-tab-badge" id="todoGlobalBadge" style="display:none">0</span></button>
@@ -991,6 +1032,27 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- ===== CLIENTS ===== -->
+    <div id="sec-clients" class="page" style="display:none">
+        <div class="section-title">Clients</div>
+        <div class="clients-stat-row" id="clientsStatRow"></div>
+        <div class="clients-header">
+            <div class="clients-tabs">
+                <button class="clients-tab active" id="ctab-all" onclick="switchClientTab('all')">All Clients</button>
+                <button class="clients-tab" id="ctab-recurring" onclick="switchClientTab('recurring')">Recurring</button>
+                <button class="clients-tab" id="ctab-onetime" onclick="switchClientTab('onetime')">One-Time</button>
+                <button class="clients-tab" id="ctab-lost" onclick="switchClientTab('lost')">Lost Clients</button>
+            </div>
+        </div>
+        <div id="clientsFreqBar" style="display:none" class="clients-freq-tabs">
+            <button class="clients-freq-tab active" id="cfreq-all" onclick="switchClientFreq('all')">All</button>
+            <button class="clients-freq-tab" id="cfreq-monthly" onclick="switchClientFreq('monthly')">Monthly</button>
+            <button class="clients-freq-tab" id="cfreq-weekly" onclick="switchClientFreq('weekly')">Weekly</button>
+            <button class="clients-freq-tab" id="cfreq-biweekly" onclick="switchClientFreq('biweekly')">Bi-Weekly</button>
+        </div>
+        <div class="clients-grid" id="clientsGrid"></div>
     </div>
 
     <!-- ===== ENTRY ===== -->
@@ -1775,12 +1837,13 @@ auth.onAuthStateChanged(user => {
         loadSettings();
         loadHiringCandidates();
         loadTodos();
+        loadLostClients();
     } else {
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('appScreen').classList.remove('visible');
         dbRefs.forEach(r => r.off());
         dbRefs = [];
-        leads = []; adSpend = {}; reviewBonuses = []; weeklyGoals = {}; hiringCandidates = []; todos = [];
+        leads = []; adSpend = {}; reviewBonuses = []; weeklyGoals = {}; hiringCandidates = []; todos = []; lostClients = {};
     }
 });
 
@@ -1871,7 +1934,7 @@ function closeMobileMenu() {
 function showSection(sec) {
     closeMobileMenu();
     currentSection = sec;
-    const sections = ['dashboard','leads','followup','analysis','platforms','commissions','reviews','commercial','goals','hiring','todo','settings','entry'];
+    const sections = ['dashboard','leads','followup','analysis','platforms','commissions','reviews','commercial','clients','goals','hiring','todo','settings','entry'];
     sections.forEach(s => {
         document.getElementById('sec-'+s).style.display = s===sec ? 'block' : 'none';
         const tab = document.getElementById('tab-'+s);
@@ -1888,6 +1951,7 @@ function showSection(sec) {
     if (sec==='commissions') renderCommissions();
     if (sec==='reviews')     renderReviewsTab();
     if (sec==='commercial')  renderCommercialLeads();
+    if (sec==='clients')    renderClientsSection();
     if (sec==='goals')       { renderGoals(); if (goalsViewMode==='monthly') renderMonthlyGoals(); }
     if (sec==='hiring')      renderHiringList();
     if (sec==='todo')        renderTodoSection();
@@ -4439,6 +4503,166 @@ function completeTodo(id) {
 
 function deleteTodo(id) {
     uref('todos/'+id).remove().catch(e => alert('Error: '+e.message));
+}
+
+// ─── CLIENTS MODULE ───────────────────────────────────────
+let lostClients = {};
+let currentClientTab = 'all';
+let currentClientFreq = 'all';
+
+function loadLostClients() {
+    const ref = uref('lostClients');
+    ref.on('value', snap => {
+        lostClients = snap.val() || {};
+        if (currentSection === 'clients') renderClientsSection();
+    });
+    dbRefs.push(ref);
+}
+
+function switchClientTab(tab) {
+    currentClientTab = tab;
+    ['all','recurring','onetime','lost'].forEach(function(t) {
+        var el = document.getElementById('ctab-'+t);
+        if (el) el.classList.toggle('active', t===tab);
+    });
+    var freqBar = document.getElementById('clientsFreqBar');
+    if (freqBar) freqBar.style.display = tab==='recurring' ? 'flex' : 'none';
+    if (tab !== 'recurring') currentClientFreq = 'all';
+    renderClientsSection();
+}
+
+function switchClientFreq(freq) {
+    currentClientFreq = freq;
+    ['all','monthly','weekly','biweekly'].forEach(function(f) {
+        var el = document.getElementById('cfreq-'+f);
+        if (el) el.classList.toggle('active', f===freq);
+    });
+    renderClientsSection();
+}
+
+function getBookedClients() {
+    return leads.filter(function(l) { return l.status === 'booked' || l.status === 'confirmed'; });
+}
+
+function freqLabelStr(f) {
+    return f==='monthly'?'Monthly':f==='weekly'?'Weekly':f==='biweekly'?'Bi-Weekly':'One-Time';
+}
+
+function renderClientsSection() {
+    var booked = getBookedClients();
+    var lostIds = new Set(Object.keys(lostClients));
+    var recurring = booked.filter(function(l) { return l.frequency && l.frequency !== 'onetime' && !lostIds.has(l.id); });
+    var onetime   = booked.filter(function(l) { return (!l.frequency || l.frequency === 'onetime') && !lostIds.has(l.id); });
+    var lostList  = Object.values(lostClients);
+
+    var statRow = document.getElementById('clientsStatRow');
+    if (statRow) {
+        statRow.innerHTML =
+            '<div class="clients-stat"><div class="clients-stat-num">'+booked.length+'</div><div class="clients-stat-lbl">Total Booked</div></div>' +
+            '<div class="clients-stat"><div class="clients-stat-num">'+recurring.length+'</div><div class="clients-stat-lbl">Recurring</div></div>' +
+            '<div class="clients-stat"><div class="clients-stat-num">'+onetime.length+'</div><div class="clients-stat-lbl">One-Time</div></div>' +
+            '<div class="clients-stat"><div class="clients-stat-num" style="color:var(--danger)">'+lostList.length+'</div><div class="clients-stat-lbl">Lost</div></div>';
+    }
+
+    var list = [];
+    if (currentClientTab === 'all') {
+        list = recurring.concat(onetime);
+    } else if (currentClientTab === 'recurring') {
+        list = recurring;
+        if (currentClientFreq !== 'all') list = list.filter(function(l) { return l.frequency === currentClientFreq; });
+    } else if (currentClientTab === 'onetime') {
+        list = onetime;
+    }
+
+    var grid = document.getElementById('clientsGrid');
+    if (!grid) return;
+
+    if (currentClientTab === 'lost') {
+        if (!lostList.length) { grid.innerHTML = '<div class="clients-empty">No lost clients recorded.</div>'; return; }
+        grid.innerHTML = lostList.map(function(cl) {
+            return '<div class="client-card">' +
+              '<div class="client-card-header">' +
+                '<div class="client-card-name">'+esc(cl.name||'')+'</div>' +
+                '<span class="client-card-freq freq-'+(cl.frequency||'onetime')+'">'+freqLabelStr(cl.frequency)+'</span>' +
+              '</div>' +
+              '<div class="client-card-info">' +
+                (cl.phone ? '<span>&#128222; '+esc(cl.phone)+'</span>' : '') +
+                (cl.email ? '<span>&#9993; '+esc(cl.email)+'</span>' : '') +
+                (cl.platform ? '<span>&#128279; '+esc(cl.platform)+'</span>' : '') +
+                (cl.lostDate ? '<span>Lost: '+fmtDate(cl.lostDate)+'</span>' : '') +
+              '</div>' +
+              (cl.reason ? '<div class="client-lost-reason">Reason: '+esc(cl.reason)+'</div>' : '') +
+              '<div class="client-card-actions">' +
+                '<button class="btn-restore-client" onclick="restoreClient(\''+esc(cl.id)+'\')">Restore</button>' +
+              '</div>' +
+            '</div>';
+        }).join('');
+        return;
+    }
+
+    if (!list.length) { grid.innerHTML = '<div class="clients-empty">No clients in this view.</div>'; return; }
+    grid.innerHTML = list.map(function(l) {
+        var freqClass = l.frequency || 'onetime';
+        var isRecurring = l.frequency && l.frequency !== 'onetime';
+        var escapedId = esc(l.id||'');
+        var escapedName = esc(l.name||'');
+        var escapedFreq = esc(l.frequency||'');
+        var escapedPhone = esc(l.phone||'');
+        var escapedEmail = esc(l.email||'');
+        var escapedPlatform = esc(l.platform||'');
+        return '<div class="client-card">' +
+          '<div class="client-card-header">' +
+            '<div class="client-card-name">'+escapedName+'</div>' +
+            '<span class="client-card-freq freq-'+freqClass+'">'+freqLabelStr(l.frequency)+'</span>' +
+          '</div>' +
+          '<div class="client-card-info">' +
+            (l.phone ? '<span>&#128222; '+escapedPhone+'</span>' : '') +
+            (l.email ? '<span>&#9993; '+escapedEmail+'</span>' : '') +
+            (l.platform ? '<span>&#128279; '+escapedPlatform+'</span>' : '') +
+            (l.date ? '<span>Booked: '+fmtDate(l.date)+'</span>' : '') +
+          '</div>' +
+          '<div class="client-card-actions">' +
+            (isRecurring ? '<button class="btn-mark-lost" onclick="openLostModal(\''+escapedId+'\',\''+escapedName+'\',\''+escapedFreq+'\',\''+escapedPhone+'\',\''+escapedEmail+'\',\''+escapedPlatform+'\')">Mark as Lost</button>' : '') +
+          '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function openLostModal(id, name, freq, phone, email, platform) {
+    var overlay = document.createElement('div');
+    overlay.className = 'lost-modal-overlay';
+    overlay.id = 'lostModalOverlay';
+    overlay.innerHTML =
+        '<div class="lost-modal">' +
+          '<h3>Mark as Lost</h3>' +
+          '<p>Client: <strong>'+esc(name)+'</strong><br>Why did you lose this client?</p>' +
+          '<textarea id="lostReasonInput" placeholder="Enter reason (optional)..."></textarea>' +
+          '<div class="lost-modal-actions">' +
+            '<button class="btn" onclick="closeLostModal()">Cancel</button>' +
+            '<button class="btn btn-primary" onclick="confirmMarkLost(\''+esc(id)+'\',\''+esc(name)+'\',\''+esc(freq)+'\',\''+esc(phone)+'\',\''+esc(email)+'\',\''+esc(platform)+'\')">Confirm</button>' +
+          '</div>' +
+        '</div>';
+    document.body.appendChild(overlay);
+    var inp = document.getElementById('lostReasonInput');
+    if (inp) inp.focus();
+}
+
+function closeLostModal() {
+    var el = document.getElementById('lostModalOverlay');
+    if (el) el.remove();
+}
+
+function confirmMarkLost(id, name, freq, phone, email, platform) {
+    var inp = document.getElementById('lostReasonInput');
+    var reason = inp ? inp.value.trim() : '';
+    var record = { id:id, name:name, frequency:freq, phone:phone, email:email, platform:platform, reason:reason, lostDate: new Date().toISOString().slice(0,10) };
+    uref('lostClients/'+id).set(record).catch(function(e) { alert('Error: '+e.message); });
+    closeLostModal();
+}
+
+function restoreClient(id) {
+    if (!confirm('Restore this client?')) return;
+    uref('lostClients/'+id).remove().catch(function(e) { alert('Error: '+e.message); });
 }
 </script>
 </body>
