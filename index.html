@@ -3423,11 +3423,48 @@ function showAnalysisModal(cardLabel) {
 }
 
 // ===== CSV EXPORT =====
+const CSV_FIELDS = [
+    {key:'name',       label:'Name',            on:true},
+    {key:'phone',      label:'Phone',           on:true},
+    {key:'email',      label:'Email',           on:true},
+    {key:'date',       label:'Date',            on:true},
+    {key:'platform',   label:'Platform',        on:true},
+    {key:'status',     label:'Status',          on:true},
+    {key:'bookedBy',   label:'Booked By',       on:false},
+    {key:'frequency',  label:'Frequency',       on:false},
+    {key:'cleaningType',label:'Cleaning Type',  on:false},
+    {key:'grossValue', label:'Gross Value',     on:false},
+    {key:'netValue',   label:'Net Value',       on:false},
+    {key:'secondCleanDate',label:'2nd Clean Date',on:false},
+    {key:'notes',      label:'Notes',           on:false},
+];
 function exportCSV() {
-    const headers = 'name,date,platform,status,bookedBy,cleaningType,grossValue,netValue,frequency,secondCleanDate,hasFiveStarReview,vaMentioned,notes';
-    const rows = leads.map(l => [l.name,l.date,l.platform,l.status,l.bookedBy,l.cleaningType,l.grossValue,l.netValue,l.frequency,l.secondCleanDate,l.hasFiveStarReview,l.vaMentioned,l.notes||''].map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(','));
-    const blob = new Blob([headers+'\n'+rows.join('\n')],{type:'text/csv'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='leads-export.csv'; a.click();
+    const pool = getFilteredLeads();
+    const ov = document.createElement('div');
+    ov.id = 'csvExportOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(11,24,41,.45);z-index:9100;display:flex;align-items:center;justify-content:center';
+    const count = pool.length;
+    ov.innerHTML = `<div style="background:var(--white);border-radius:16px;padding:28px;width:400px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.18)">
+      <h3 style="margin:0 0 4px;font-size:17px;font-weight:800;color:var(--text-dark)">Export CSV</h3>
+      <p style="margin:0 0 18px;font-size:13px;color:var(--text-mid)">${count} lead${count!==1?'s':''} with current filters</p>
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Select fields to include</div>
+      <div id="csvFieldList" style="display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;margin-bottom:20px">${CSV_FIELDS.map((f,i)=>`<label style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="csvf_${i}" ${f.on?'checked':''} style="accent-color:var(--blue);width:15px;height:15px"> ${f.label}</label>`).join('')}</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="document.getElementById('csvExportOverlay').remove()" style="padding:8px 18px;border-radius:9px;border:1.5px solid var(--line);background:transparent;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+        <button onclick="doExportCSV()" style="padding:8px 18px;border-radius:9px;border:none;background:var(--blue);color:#fff;font-size:13px;font-weight:700;cursor:pointer">Download CSV</button>
+      </div>
+    </div>`;
+    document.body.appendChild(ov);
+}
+function doExportCSV() {
+    const pool = getFilteredLeads();
+    const fields = CSV_FIELDS.filter((_,i) => document.getElementById('csvf_'+i)?.checked);
+    if (!fields.length) { alert('Select at least one field.'); return; }
+    const header = fields.map(f=>'"'+f.label+'"').join(',');
+    const rows = pool.map(l => fields.map(f => '"'+(l[f.key]||'').toString().replace(/"/g,'""')+'"').join(','));
+    const blob = new Blob([header+'\n'+rows.join('\n')], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'leads-export.csv'; a.click();
+    document.getElementById('csvExportOverlay')?.remove();
 }
 
 // ===== CSV IMPORT =====
